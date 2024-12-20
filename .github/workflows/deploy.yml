@@ -54,6 +54,7 @@ jobs:
           exit 1
         fi
         echo "${KUBE_CONFIG_DATA}" | base64 --decode > $HOME/.kube/config
+        kubectl config view
         IMAGE_TAG=${{ github.sha }}
         kubectl set image deployment/nginx-rtmp-server nginx-rtmp-server=nginx-rtmp-server:${IMAGE_TAG} --record
         kubectl rollout status deployment/nginx-rtmp-server || kubectl logs deployment/nginx-rtmp-server
