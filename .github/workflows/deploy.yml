@@ -21,13 +21,6 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
-    # Langkah 3: Jalankan build script
-    - name: Run build script
-      run: |
-        cd platform
-        chmod +x build.sh
-        ./build.sh
-
     # Langkah 4: Build Docker image
     - name: Build Docker image
       run: |
