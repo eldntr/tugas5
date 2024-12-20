@@ -44,11 +44,13 @@ RUN mkdir -p /usr/local/nginx/html && \
 RUN rm -rf /nginx-1.19.10* && \
     rm -rf /v1.2.1.tar.gz
 
-COPY nginx.conf /usr/local/nginx/conf/nginx.conf
+COPY platform/nginx.conf /usr/local/nginx/conf/nginx.conf
 
-COPY www /usr/local/nginx/html
+COPY platform/www /usr/local/nginx/html
 
-COPY app.py /app.py
+COPY platform/app.py /app.py
+
+COPY platform/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 RUN mkdir -p /var/log && \
     touch /var/log/supervisord.log && \
@@ -61,8 +63,6 @@ RUN mkdir -p /var/log && \
 
 RUN mkdir -p /tmp && \
     chmod 777 /tmp
-
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 RUN mkdir -p /var/log && chmod -R 777 /var/log
 
