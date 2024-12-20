@@ -21,30 +21,30 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
-    # Langkah 4: Build Docker image
+    # Langkah 3: Build Docker image
     - name: Build Docker image
       run: |
         IMAGE_TAG=${{ github.sha }}
         docker build -t nginx-rtmp-server:${IMAGE_TAG} -f platform/Dockerfile .
 
-    # Langkah 5: Setup Kind
+    # Langkah 4: Setup Kind
     - name: Set up Kind
       uses: engineerd/setup-kind@v0.5.0
       with:
         version: v0.11.1
 
-    # Langkah 6: Load Docker image ke kluster Kind
+    # Langkah 5: Load Docker image ke kluster Kind
     - name: Load Docker image into Kind
       run: |
         IMAGE_TAG=${{ github.sha }}
         kind load docker-image nginx-rtmp-server:${IMAGE_TAG}
 
-    # Langkah 7: Terapkan file manifest Kubernetes
+    # Langkah 6: Terapkan file manifest Kubernetes
     - name: Apply Kubernetes manifests
       run: |
         kubectl apply -f kubernetes/deployment.yaml
 
-    # Langkah 8: Update deployment Kubernetes dengan image baru
+    # Langkah 7: Update deployment Kubernetes dengan image baru
     - name: Update Kubernetes deployment
       env:
         KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
@@ -54,6 +54,7 @@ jobs:
           exit 1
         fi
         echo "${KUBE_CONFIG_DATA}" | base64 --decode > $HOME/.kube/config
+        kubectl config use-context kind-kind
         kubectl config view
         IMAGE_TAG=${{ github.sha }}
         kubectl set image deployment/nginx-rtmp-server nginx-rtmp-server=nginx-rtmp-server:${IMAGE_TAG} --record
