@@ -1,1 +1,1 @@
-docker build -t nginx-rtmp-server -f Dockerfile .
+docker build -t nginx-rtmp-server -f platform/Dockerfile .
