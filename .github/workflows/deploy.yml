@@ -46,4 +46,4 @@ jobs:
       run: |
         echo "${KUBE_CONFIG_DATA}" | base64 --decode > $HOME/.kube/config
         kubectl set image deployment/nginx-rtmp-server nginx-rtmp-server=nginx-rtmp-server:latest --record
-        kubectl rollout status deployment/nginx-rtmp-server
+        kubectl rollout status deployment/nginx-rtmp-server || kubectl logs deployment/nginx-rtmp-server
