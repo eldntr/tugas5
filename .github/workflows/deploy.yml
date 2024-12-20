@@ -26,7 +26,8 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t nginx-rtmp-server:latest .
+        IMAGE_TAG=${{ github.sha }}
+        docker build -t nginx-rtmp-server:${IMAGE_TAG} .
 
     - name: Set up Kind
       uses: engineerd/setup-kind@v0.5.0
@@ -34,7 +35,9 @@ jobs:
         version: v0.11.1
 
     - name: Load Docker image into Kind
-      run: kind load docker-image nginx-rtmp-server:latest
+      run: |
+        IMAGE_TAG=${{ github.sha }}
+        kind load docker-image nginx-rtmp-server:${IMAGE_TAG}
 
     - name: Apply Kubernetes manifests
       run: |
@@ -44,6 +47,7 @@ jobs:
       env:
         KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
       run: |
+        IMAGE_TAG=${{ github.sha }}
         echo "${KUBE_CONFIG_DATA}" | base64 --decode > $HOME/.kube/config
-        kubectl set image deployment/nginx-rtmp-server nginx-rtmp-server=nginx-rtmp-server:latest --record
+        kubectl set image deployment/nginx-rtmp-server nginx-rtmp-server=nginx-rtmp-server:${IMAGE_TAG} --record
         kubectl rollout status deployment/nginx-rtmp-server || kubectl logs deployment/nginx-rtmp-server

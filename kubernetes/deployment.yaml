@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
       - name: nginx-rtmp-server
-        image: nginx-rtmp-server:latest  
+        image: nginx-rtmp-server:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
         - containerPort: 1935
